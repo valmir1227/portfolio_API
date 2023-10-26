@@ -108,4 +108,7 @@ app.post("/send-email", (req, res) => {
   });
 });
 
-app.listen(process.env.PORT || 8000);
+app.listen({
+  host: "0.0.0.0",
+  port: process.env.PORT ?? 8000,
+});
