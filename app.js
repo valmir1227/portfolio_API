@@ -108,7 +108,7 @@ app.post("/send-email", (req, res) => {
   });
 });
 
-app.listen({
-  host: "0.0.0.0",
-  port: process.env.PORT,
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Servidor Rodando na porta ${port}`);
 });
