@@ -1,7 +1,8 @@
 const express = require("express");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
+const { addAbortListener } = require("nodemailer/lib/xoauth2");
 require("dotenv").config();
 const uri = process.env.MONGO_URI;
 
@@ -68,6 +69,55 @@ app.post("/newsletter", async (req, res) => {
     res
       .status(500)
       .send("Ocorreu um erro ao tentar adicionar o email à coleção.");
+  } finally {
+    await client.close();
+  }
+});
+
+//GET PROJECTS
+
+app.get("/projects", async (req, res) => {
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect();
+    const database = client.db("portfolio");
+    const projectsCollection = database.collection("projects");
+
+    const pipeline = [];
+
+    const allProjects = await projectsCollection.aggregate(pipeline).toArray();
+
+    res.json(allProjects);
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).send("Ocorreu um erro ao tentar buscar projetos.");
+  } finally {
+    await client.close();
+  }
+});
+
+app.get("/projects/:projectId", async (req, res) => {
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect();
+    const database = client.db("portfolio");
+    const projectsCollection = database.collection("projects");
+
+    const projectId = req.params.projectId;
+
+    const project = await projectsCollection.findOne({
+      id: projectId,
+    });
+
+    if (!project) {
+      return res.status(404).json({ message: "Projeto não encontrado" });
+    }
+    res.json(project);
+  } catch (error) {
+    console.log("Erro:", error);
+    res.status(500).send("Erro ao buscar projeto");
   } finally {
     await client.close();
   }
