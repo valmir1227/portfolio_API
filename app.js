@@ -2,7 +2,6 @@ const express = require("express");
 const { MongoClient, ObjectId } = require("mongodb");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
-const { addAbortListener } = require("nodemailer/lib/xoauth2");
 require("dotenv").config();
 const uri = process.env.MONGO_URI;
 
@@ -75,7 +74,6 @@ app.post("/newsletter", async (req, res) => {
 });
 
 //GET PROJECTS
-
 app.get("/projects", async (req, res) => {
   const client = new MongoClient(uri);
 
@@ -133,18 +131,13 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post("/send-email", (req, res) => {
-  const { from, fullName, phone, subject, text } = req.body;
-  if (!fullName || !from || !subject || !text) {
-    res.status(400).json({
-      error: "Todoss os campos são obrigatórios",
-    });
-  }
+  const { from, name, phone, subject, text } = req.body;
 
   const mailOptions = {
     from: from,
     to: "almeidavalmir76@gmail.com",
     subject: `Assunto: ${subject}`,
-    text: `Nome:${fullName}\nE-mail: ${from}\nTelefone: ${phone}\n${text}`,
+    text: `Nome:${name}\nE-mail: ${from}\nTelefone: ${phone}\n${text}`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
