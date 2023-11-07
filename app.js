@@ -11,7 +11,14 @@ const emailConfig = {
 };
 
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+  origin: "https://valmiralmeidadev.com",
+  methods: "GET, POST, DELETE, PUT",
+  allowedHeaders: "Content-Type",
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use((err, req, res, next) => {
@@ -74,7 +81,6 @@ router.post("/newsletter", async (req, res) => {
     next(err);
   }
 });
-
 
 //Projects routes
 router.get("/projects", async (req, res) => {
