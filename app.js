@@ -12,11 +12,7 @@ const emailConfig = {
 
 const app = express();
 const corsOptions = {
-  origin: [
-    "valmiralmeida.com",
-    "www.valmiralmeida.com",
-    "valmir-almeida-portfolio.vercel.app",
-  ],
+  origin: "valmiralmeida.com",
   methods: "GET, POST, DELETE, PUT",
   allowedHeaders: "Content-Type",
 };
